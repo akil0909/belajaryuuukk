@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#171832" />
+  <meta name="description" content="Studia membantu mahasiswa menyiapkan UTS dan UAS dengan materi, ringkasan, latihan soal, flashcard, peta konsep, dan referensi jurnal." />
+  <title>Studia — Teman Belajar UTS & UAS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Studia beranda">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 8.5c4.7-1.8 8.7-.7 12 2.3v15c-3.3-3-7.3-4.1-12-2.3z"/><path d="M28 8.5c-4.7-1.8-8.7-.7-12 2.3v15c3.3-3 7.3-4.1 12-2.3z"/><path d="M16 10.8v15"/></svg></span>
+        <span class="brand-name">studia<span>.</span><small>RUANG BELAJAR</small></span>
+      </a>
+      <div class="side-caption">MENU UTAMA</div>
+      <nav class="side-nav" aria-label="Navigasi utama">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-icon">⌂</span><span>Beranda</span></button>
+        <button class="nav-item" data-view="materials"><span class="nav-icon">▤</span><span>Materi Saya</span><span class="nav-count" id="navMaterialCount">0</span></button>
+        <button class="nav-item" data-view="summary"><span class="nav-icon">✳</span><span>Ringkasan</span></button>
+        <button class="nav-item" data-view="quiz"><span class="nav-icon">✓</span><span>Latihan Soal</span></button>
+        <button class="nav-item" data-view="flashcards"><span class="nav-icon">▱</span><span>Flashcard</span></button>
+        <button class="nav-item" data-view="mindmap"><span class="nav-icon">⌘</span><span>Peta Konsep</span></button>
+        <button class="nav-item" data-view="journals"><span class="nav-icon">⌕</span><span>Cari Jurnal</span><span class="external-dot">↗</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="focus-card">
+          <div class="focus-icon">✦</div>
+          <div><strong>Belajar sedikit, rutin</strong><p>Kemajuan dibangun dari langkah kecil setiap hari.</p></div>
+          <div class="focus-track"><span id="focusTrack"></span></div>
+          <div class="focus-meta"><span>Target sesi</span><strong id="focusMeta">0 / 3</strong></div>
+        </div>
+        <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span><span>Pengaturan</span></button>
+        <div class="profile-mini"><div class="avatar">S</div><div><strong>Mahasiswa</strong><small>Ruang belajar pribadi</small></div><span class="dots">•••</span></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuToggle" aria-label="Buka menu">☰</button>
+        <div class="breadcrumb"><span>Ruang belajar</span><span class="breadcrumb-slash">/</span><strong id="pageBreadcrumb">Beranda</strong></div>
+        <div class="topbar-actions">
+          <div class="today-pill"><span class="today-dot"></span><span id="todayLabel">Hari ini</span></div>
+          <button class="icon-button help-button" id="helpButton" aria-label="Panduan singkat" title="Panduan singkat">?</button>
+          <div class="top-avatar">S</div>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view active" id="view-dashboard">
+          <div class="welcome-row">
+            <div><div class="eyebrow"><span class="sparkle">✦</span> TEMPATMU BERTUMBUH</div><h1>Halo, pejuang kampus! <span class="wave">✋</span></h1><p class="welcome-sub">Siapkan UTS dan UAS dengan cara belajar yang lebih terarah.</p></div>
+            <button class="button button-primary" id="openAddFromHero"><span>＋</span> Tambah materi</button>
+          </div>
+          <div class="hero-banner">
+            <div class="hero-copy"><div class="hero-label"><span class="hero-star">✦</span> STUDY SMARTER, NOT HARDER</div><h2>Satu materi hari ini.<br><em>Lebih siap</em> di hari ujian.</h2><p>Ubah bahan kuliah menjadi ringkasan, soal latihan, flashcard, dan peta konsep dalam satu ruang.</p><button class="button button-light" data-go="materials">Mulai belajar <span>→</span></button></div>
+            <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-sun"></div><div class="art-book book-back"></div><div class="art-book book-front"><div class="book-line"></div><div class="book-line short"></div><div class="book-line"></div><div class="book-line tiny"></div></div><div class="art-pencil"></div><div class="art-note"><span>IDE</span><strong>→</strong><small>PAHAM</small></div><div class="art-spark s1">✦</div><div class="art-spark s2">✧</div><div class="art-spark s3">✦</div></div>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon lilac">▤</span><span class="stat-label">Materi tersimpan</span></div><div class="stat-bottom"><strong id="statMaterials">0</strong><span class="stat-note">bahan belajar</span></div><div class="stat-decor lilac-line"></div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon mint">▱</span><span class="stat-label">Flashcard</span></div><div class="stat-bottom"><strong id="statCards">0</strong><span class="stat-note">kartu belajar</span></div><div class="stat-decor mint-line"></div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon peach">✓</span><span class="stat-label">Soal dikerjakan</span></div><div class="stat-bottom"><strong id="statQuestions">0</strong><span class="stat-note">latihan selesai</span></div><div class="stat-decor peach-line"></div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon blue">◷</span><span class="stat-label">Sesi belajar</span></div><div class="stat-bottom"><strong id="statSessions">0</strong><span class="stat-note">sesi tercatat</span></div><div class="stat-decor blue-line"></div></article>
+          </div>
+          <div class="dashboard-grid">
+            <section class="panel recent-panel"><div class="panel-heading"><div><h3>Materi terbaru</h3><p>Semua bahan belajarmu, di satu tempat.</p></div><button class="text-button" data-go="materials">Lihat semua <span>→</span></button></div><div id="recentMaterials" class="recent-list"><div class="empty-inline">Belum ada materi. Tambahkan PDF, dokumen, tautan, atau judul topik pertamamu.</div></div></section>
+            <section class="panel quick-panel"><div class="panel-heading"><div><h3>Mulai dari sini</h3><p>Pilih cara belajar yang kamu butuhkan.</p></div><span class="panel-heading-icon">✦</span></div><div class="quick-actions"><button class="quick-action" data-go="summary"><span class="quick-icon q-purple">✳</span><span><strong>Ringkas materi</strong><small>Ambil inti pembahasan</small></span><span class="quick-arrow">↗</span></button><button class="quick-action" data-go="quiz"><span class="quick-icon q-peach">✓</span><span><strong>Latihan soal</strong><small>Uji pemahamanmu</small></span><span class="quick-arrow">↗</span></button><button class="quick-action" data-go="flashcards"><span class="quick-icon q-mint">▱</span><span><strong>Hafalkan konsep</strong><small>Belajar dengan flashcard</small></span><span class="quick-arrow">↗</span></button><button class="quick-action" data-go="journals"><span class="quick-icon q-blue">⌕</span><span><strong>Temukan referensi</strong><small>Cari artikel ilmiah</small></span><span class="quick-arrow">↗</span></button></div></section>
+          </div>
+          <div class="disclaimer-strip"><span class="info-circle">i</span><p>Studia adalah teman belajar, bukan jaminan nilai. Periksa kembali ringkasan dan referensi, lalu gunakan latihan aktif untuk menguji pemahamanmu.</p></div>
+        </section>
+
+        <section class="view" id="view-materials">
+          <div class="page-head"><div><div class="eyebrow">PERPUSTAKAAN PRIBADI</div><h1>Materi saya</h1><p>Simpan materi dari semua mata kuliah dalam satu ruang.</p></div><button class="button button-primary" id="openAddFromMaterials">＋ Tambah materi</button></div>
+          <div class="material-toolbar"><label class="search-box"><span>⌕</span><input id="materialSearch" type="search" placeholder="Cari judul atau mata kuliah..." /></label><select id="courseFilter" aria-label="Filter mata kuliah"><option value="all">Semua mata kuliah</option></select><span class="result-count" id="materialResultCount">0 materi</span></div>
+          <div class="materials-grid" id="materialsGrid"><div class="empty-state"><div class="empty-illustration">▤</div><h3>Perpustakaanmu masih kosong</h3><p>Unggah dokumen atau masukkan judul materi untuk mulai membangun ruang belajar.</p><button class="button button-primary" id="emptyAddButton">Tambah materi pertama</button></div></div>
+        </section>
+
+        <section class="view" id="view-summary">
+          <div class="page-head"><div><div class="eyebrow">PAHAMI INTINYA</div><h1>Ringkasan materi</h1><p>Ubah bacaan panjang menjadi poin-poin yang lebih mudah dipelajari.</p></div><span class="feature-mark purple-mark">✳</span></div>
+          <div class="tool-layout"><section class="panel tool-config"><div class="panel-heading"><div><h3>Pilih materi</h3><p>Ringkasan dibuat berdasarkan teks yang tersedia.</p></div></div><label class="field-label" for="summaryMaterial">Bahan belajar</label><select id="summaryMaterial" class="field"><option value="">Pilih materi...</option></select><div class="field-hint">Materi berupa judul saja perlu dilengkapi teks agar bisa diringkas.</div><button id="generateSummary" class="button button-primary full-button">Buat ringkasan <span>→</span></button><div id="summaryAiStatus" class="mode-note"><span class="status-dot"></span> Mode lokal siap digunakan</div></section><section class="panel output-panel"><div class="output-placeholder" id="summaryOutput"><div class="output-symbol">✦</div><h3>Ringkasanmu akan muncul di sini</h3><p>Pilih salah satu materi, lalu tekan “Buat ringkasan”. Poin penting dan kata kunci akan disusun agar lebih mudah ditinjau ulang.</p></div></section></div>
+        </section>
+
+        <section class="view" id="view-quiz">
+          <div class="page-head"><div><div class="eyebrow">LATIHAN AKTIF</div><h1>Latihan soal</h1><p>Uji pemahamanmu dengan soal dari bahan kuliah sendiri.</p></div><span class="feature-mark peach-mark">✓</span></div>
+          <div class="tool-layout quiz-layout"><section class="panel tool-config"><div class="panel-heading"><div><h3>Atur latihan</h3><p>Sesuaikan dengan target belajarmu.</p></div></div><label class="field-label" for="quizMaterial">Bahan belajar</label><select id="quizMaterial" class="field"><option value="">Pilih materi...</option></select><label class="field-label" for="questionCount">Jumlah soal</label><select id="questionCount" class="field"><option value="5">5 soal</option><option value="10" selected>10 soal</option><option value="15">15 soal</option><option value="20">20 soal</option><option value="30">30 soal</option></select><div class="field-label">Tingkat kesulitan</div><div class="difficulty-options" role="group" aria-label="Tingkat kesulitan"><label class="difficulty-option"><input type="radio" name="difficulty" value="mudah"><span><i class="diff-dot easy"></i>Mudah</span></label><label class="difficulty-option selected"><input type="radio" name="difficulty" value="sedang" checked><span><i class="diff-dot medium"></i>Sedang</span></label><label class="difficulty-option"><input type="radio" name="difficulty" value="sulit"><span><i class="diff-dot hard"></i>Sulit</span></label></div><label class="field-label" for="quizType">Format soal</label><select id="quizType" class="field"><option value="mcq">Pilihan ganda</option><option value="short">Pertanyaan singkat</option></select><button id="startQuiz" class="button button-primary full-button">Buat latihan soal <span>→</span></button><p class="small-note">Soal lokal dibentuk dari teks materi. Tinjau kunci dan sumbernya sebelum dijadikan patokan ujian.</p></section><section class="panel quiz-workspace" id="quizWorkspace"><div class="output-placeholder"><div class="output-symbol peach-symbol">✓</div><h3>Waktunya cek pemahaman</h3><p>Pilih materi, jumlah soal, dan tingkat kesulitan. Kerjakan tanpa melihat catatan terlebih dahulu, lalu telaah jawaban yang salah.</p></div></section></div>
+        </section>
+
+        <section class="view" id="view-flashcards">
+          <div class="page-head"><div><div class="eyebrow">INGAT LEBIH LAMA</div><h1>Flashcard</h1><p>Aktifkan ingatanmu dengan kartu tanya-jawab.</p></div><span class="feature-mark mint-mark">▱</span></div>
+          <div class="flash-layout"><section class="panel flash-config"><label class="field-label" for="flashMaterial">Pilih materi</label><select id="flashMaterial" class="field"><option value="">Pilih materi...</option></select><button id="generateFlashcards" class="button button-primary full-button">Buat flashcard</button><div class="flash-tip"><span>✦</span><div><strong>Cara belajar efektif</strong><p>Coba jawab dulu sebelum membalik kartu. Tandai materi yang masih sulit dan ulangi lagi nanti.</p></div></div><div class="saved-sets-wrap" id="savedFlashcardSets"></div></section><section class="flash-stage" id="flashStage"><div class="output-placeholder"><div class="output-symbol mint-symbol">▱</div><h3>Kartu belajarmu menunggu</h3><p>Ambil satu materi dan buat set flashcard untuk mulai berlatih.</p></div></section></div>
+        </section>
+
+        <section class="view" id="view-mindmap">
+          <div class="page-head"><div><div class="eyebrow">LIHAT GAMBAR BESARNYA</div><h1>Peta konsep mini</h1><p>Hubungkan gagasan utama dan konsep pendukung secara visual.</p></div><span class="feature-mark blue-mark">⌘</span></div>
+          <div class="mindmap-toolbar panel"><div><label class="field-label" for="mapMaterial">Bahan belajar</label><select id="mapMaterial" class="field"><option value="">Pilih materi...</option></select></div><button id="generateMindmap" class="button button-primary">Buat peta konsep <span>→</span></button></div>
+          <section class="panel mindmap-panel" id="mindmapOutput"><div class="output-placeholder"><div class="output-symbol blue-symbol">⌘</div><h3>Konsep terhubung, lebih mudah diingat</h3><p>Pilih materi berisi teks untuk menyusun peta konsep mini.</p></div></section>
+        </section>
+
+        <section class="view" id="view-journals">
+          <div class="page-head"><div><div class="eyebrow">RUJUKAN AKADEMIK</div><h1>Cari jurnal & artikel</h1><p>Temukan publikasi terkait topik kuliah melalui indeks Crossref.</p></div><span class="feature-mark blue-mark">⌕</span></div>
+          <section class="journal-search-panel"><div class="journal-search-copy"><span class="hero-label dark-label">RESEARCH DISCOVERY</span><h2>Mulai dari rasa ingin tahu.</h2><p>Masukkan judul materi, topik, atau kata kunci. Hasil berisi metadata publikasi yang tercatat di Crossref; cek laman penerbit untuk detail lengkap.</p></div><form id="journalSearchForm" class="journal-search-form"><label for="journalQuery">Topik atau judul penelitian</label><div class="journal-input-wrap"><span>⌕</span><input id="journalQuery" type="search" placeholder="Contoh: diplomasi digital di Asia Tenggara" required /><button class="button button-primary" type="submit">Cari artikel <span>→</span></button></div><div class="journal-actions"><select id="journalMaterialSelect" class="field"><option value="">Atau ambil dari materi tersimpan...</option></select><span>Data publikasi: Crossref</span></div></form></section>
+          <div class="journal-results-head"><div><h3 id="journalResultsTitle">Artikel yang relevan</h3><p id="journalResultsSubtitle">Masukkan topik untuk mulai mencari.</p></div><span class="result-count" id="journalResultCount"></span></div><div id="journalResults" class="journal-results"><div class="journal-empty"><span>⌕</span><strong>Referensi ilmiah akan tampil di sini</strong><p>Gunakan istilah yang spesifik agar hasil pencarian lebih sesuai dengan topikmu.</p></div></div><p class="source-note">Catatan: Crossref adalah katalog metadata publikasi, bukan penilaian kualitas jurnal. Selalu cek reputasi jurnal, DOI, tahun terbit, metode, dan apakah artikel sesuai kebutuhan akademikmu.</p>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="page-head"><div><div class="eyebrow">PENGATURAN RUANG BELAJAR</div><h1>Pengaturan</h1><p>Kontrol data belajar yang tersimpan di perangkat ini.</p></div></div>
+          <section class="panel settings-panel"><div class="settings-row"><div><h3>Penyimpanan lokal</h3><p>Materi, ringkasan, dan progres disimpan di browser perangkat ini. Data tidak otomatis tersinkron ke perangkat lain.</p></div><span class="settings-badge">Perangkat ini</span></div><div class="settings-row"><div><h3>Ekspor data belajar</h3><p>Unduh metadata materi dan progres dalam format JSON sebagai salinan cadangan.</p></div><button class="button button-secondary" id="exportData">Unduh cadangan</button></div><div class="settings-row danger-row"><div><h3>Hapus data lokal</h3><p>Menghapus seluruh materi dan progres yang tersimpan di browser ini.</p></div><button class="button button-danger" id="clearData">Hapus data</button></div><div class="settings-row"><div><h3>AI melalui server (opsional)</h3><p>Untuk memakai model AI sungguhan, jalankan server backend dan isi API key di file .env. Jangan pernah memasukkan API key rahasia ke app.js atau GitHub Pages.</p></div><span class="settings-badge muted-badge" id="aiSettingsStatus">Mode lokal</span></div></section>
+        </section>
+      </div>
+      <footer class="footer"><span>© <span id="yearLabel"></span> Studia</span><span>Dibuat untuk proses belajar yang lebih sadar <span class="footer-heart">♥</span></span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="addModal" aria-hidden="true">
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading"><div><div class="eyebrow">TAMBAH KE PERPUSTAKAAN</div><h2 id="modalTitle">Masukkan materi baru</h2><p>Satu tempat untuk semua bahan kuliahmu.</p></div><button class="icon-button close-modal" id="closeAddModal" aria-label="Tutup">×</button></div>
+      <form id="addMaterialForm">
+        <div class="form-grid"><div class="form-field full-field"><label class="field-label" for="materialTitle">Judul materi <span class="required-star">*</span></label><input class="field" id="materialTitle" name="title" placeholder="Contoh: Teori Hubungan Internasional" required maxlength="160" /></div><div class="form-field"><label class="field-label" for="materialCourse">Mata kuliah</label><input class="field" id="materialCourse" name="course" placeholder="Contoh: Pengantar HI" maxlength="100" /></div><div class="form-field"><label class="field-label" for="materialKind">Jenis bahan</label><select class="field" id="materialKind" name="kind"><option value="file">Dokumen / foto</option><option value="link">Tautan online</option><option value="title">Judul saja</option><option value="text">Teks catatan</option></select></div></div>
+        <div class="upload-zone" id="uploadZone"><input type="file" id="materialFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.md,.png,.jpg,.jpeg,.webp,.gif" hidden /><div class="upload-icon">↑</div><strong>Tarik file ke sini atau <button type="button" class="inline-upload" id="pickFile">pilih file</button></strong><p>PDF, Word, PowerPoint, TXT, atau foto · maks. yang disarankan 12 MB</p><div class="selected-file" id="selectedFile" hidden></div></div>
+        <div class="form-field hidden" id="linkField"><label class="field-label" for="materialLink">URL materi / video / laman</label><input class="field" id="materialLink" type="url" placeholder="https://..." /></div>
+        <div class="form-field hidden" id="textField"><label class="field-label" for="materialText">Isi catatan</label><textarea class="field textarea" id="materialText" rows="5" placeholder="Tempel catatan atau materi kuliah di sini..."></textarea></div>
+        <div class="form-field"><label class="field-label" for="materialTags">Kata kunci (opsional)</label><input class="field" id="materialTags" placeholder="contoh: teori, konsep, ujian" /></div>
+        <div class="form-note"><span>ⓘ</span><p>Kalau hanya memasukkan judul, materi tetap tersimpan dan bisa dipakai untuk mencari artikel terkait. Untuk ringkasan dan latihan yang akurat, tambahkan isi dokumen atau catatan.</p></div>
+        <div class="modal-actions"><button type="button" class="button button-secondary" id="cancelAdd">Batal</button><button type="submit" class="button button-primary" id="saveMaterialButton">Simpan materi <span>→</span></button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  <div class="help-modal hidden" id="helpModal"><div class="help-card"><button class="icon-button help-close" id="closeHelp" aria-label="Tutup panduan">×</button><div class="eyebrow">PANDUAN CEPAT</div><h2>Mulai belajar dengan Studia</h2><ol><li><strong>Masukkan bahan.</strong> Unggah PDF/DOCX/PPTX, tambahkan tautan, tempel catatan, atau simpan judul saja.</li><li><strong>Bangun pemahaman.</strong> Buat ringkasan, peta konsep, dan flashcard dari teks yang berhasil diekstrak.</li><li><strong>Uji diri sendiri.</strong> Tentukan jumlah soal serta tingkat kesulitan, lalu jawab tanpa melihat catatan.</li><li><strong>Periksa rujukan.</strong> Pencarian jurnal mengambil metadata Crossref; tetap verifikasi artikel sebelum dikutip.</li></ol><p>Mode tanpa backend menggunakan pemrosesan lokal sederhana. Untuk hasil AI yang lebih mendalam, jalankan backend opsional sesuai README.</p><button class="button button-primary full-button" id="gotHelp">Mengerti</button></div></div>
+</body>
+</html>
